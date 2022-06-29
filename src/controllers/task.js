@@ -19,18 +19,13 @@ const createTask = async(req = request, res = response) =>{
     const data = getParamasForTask(req.body)
     data.date_create = new Date().toLocaleDateString();
     data.id_user = 4;    
-    // try {
+    try {
         const task = new Task({...data});
         await task.save();
         await listCreateTag(req,res,task.id_task);
-        // if (validate = 1) {
-        //     result = { 'status':200,'info': task };
-        // }else{
-        //     result = { 'status':500,'info': "not save tag" };
-        // }
-    // } catch (error) {
-    //     result = { 'status':500,'info': {'msg' : error} };
-    // }
+    } catch (error) {
+        result = { 'status':500,'info': {'msg' : error} };
+    }
     return res.status(result.status).json(result.info);
 }
 

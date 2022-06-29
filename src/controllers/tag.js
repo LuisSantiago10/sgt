@@ -1,13 +1,13 @@
 const Tag = require('../models/tag');
 
-const listCreateTag = (req,res,id_task) =>{
+const listCreateTag = async(req,res,id_task) =>{
     let result = { 'status':500,'info':{'msg':'Not found, Not sent tag.'} };
     const data = getParamasStringTag(req.body);
     if (data.tags != null) {
         let listTag = data.tags.split(",");
-        listTag.forEach( function(name, indice, array) {
-              result = createTag(name,id_task);
-        });
+        for ( const name of listTag){
+            result = await createTag(name,id_task,res);
+        }
     }
     return res.status(result.status).json(result.info);
 }
@@ -18,19 +18,19 @@ const listDeleteTag = async(id_task,req = request, res = response) =>{
     const tags = findTagkByParams({id_task});
     if (tag != null) {
         tags.forEach( function({id_tag}, indice, array) {
-            result = deleteTag(id_tag,result);
+            deleteTag(id_tag,result);
       });
     }
     return res.status(result.status).json(result.info);
 }
 
-const createTag = async(name,id_task) =>{
+const createTag = async(name,id_task,res ) =>{
   
     let result = { 'status':500,'info':{'msg':'Not found, Not sent tag.'} };
     try {
         const tag = new Tag({name,id_task});
         await tag.save();
-        result = { 'status':200,'info': tag };
+        result = { 'status':200,'info': "create task and tag" };
     } catch (error) {
         result = { 'status':500,'info': {'msg' : error} };
     }
