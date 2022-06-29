@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const db = require('../db/connection');
+const {db,cretaDB,createTableTask,createTableTag} = require('../db/connection');
+
 
 class Server{
     constructor(){
@@ -10,14 +11,18 @@ class Server{
             'task' : '/api/task',
         }
 
-        // this.dbConnection();
+        this.dbConnection();
         this.middlewares();
         this.routes();
     }
 
     async dbConnection(){
         try {
+            await cretaDB();
+            await createTableTask();
+            await createTableTag();
             await db.authenticate();
+
         } catch (error) {
             throw new Error( error );
         }

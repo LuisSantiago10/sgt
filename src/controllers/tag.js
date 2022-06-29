@@ -1,31 +1,26 @@
 const Tag = require('../models/tag');
 
-const listCreateTag = async(req,res,id_task) =>{
-    let result = { 'status':500,'info':{'msg':'Not found, Not sent tag.'} };
+const listCreateTag = async(req,id_task) =>{
     const data = getParamasStringTag(req.body);
     if (data.tags != null) {
         let listTag = data.tags.split(",");
         for ( const name of listTag){
-            result = await createTag(name,id_task,res);
+            createTag(name,id_task);
         }
     }
-    return res.status(result.status).json(result.info);
 }
 
-const listDeleteTag = async(id_task,req = request, res = response) =>{
-    console.log(id_task);
+const listDeleteTag = async(id_task) =>{
     let result = { 'status':500,'info':{'msg':'Not found, the tag not found.'} };
-    const tags = findTagkByParams({id_task});
-    if (tag != null) {
-        tags.forEach( function({id_tag}, indice, array) {
-            deleteTag(id_tag,result);
-      });
+    const tags = await findTagkByParams({id_task});
+    if (tags.length > 0) {
+        for ( const tag of tags){
+            deleteTag(tag.id_tag,result);
+        }
     }
-    return res.status(result.status).json(result.info);
 }
 
-const createTag = async(name,id_task,res ) =>{
-  
+const createTag = async(name,id_task ) =>{
     let result = { 'status':500,'info':{'msg':'Not found, Not sent tag.'} };
     try {
         const tag = new Tag({name,id_task});
@@ -34,12 +29,13 @@ const createTag = async(name,id_task,res ) =>{
     } catch (error) {
         result = { 'status':500,'info': {'msg' : error} };
     }
-    return {...result};
+    return result;
 }
 
-const deleteTag = async(id_tag,result) =>{
+const deleteTag = async(id_tag) =>{
+    let result = { 'status':500,'info':{'msg':'Not found, Not sent tag.'} };
     try {
-        const tag =  await findTaskById(id_tag);
+        const tag =  await findTagkById(id_tag);
         await tag.destroy();
         result = { 'status':200,'info':{ 'msg':'Delete succees'} };
     } catch (error) {
@@ -53,11 +49,14 @@ const findTagkById = (id_tag) =>{
 }
 
 const findTagkByParams = (params) =>{
-    Pag.findAll({
+    tags = Tag.findAll({
         where: {
-          ...params
-        }
+            ...params
+        },
+        raw: true
       });
+
+    return tags;
 }
 
 const getParamasStringTag = ( params ) =>{
@@ -66,5 +65,5 @@ const getParamasStringTag = ( params ) =>{
 }
 
 module.exports = {
-    listCreateTag
+    listCreateTag,listDeleteTag
 }

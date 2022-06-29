@@ -1,5 +1,5 @@
 const { DataTypes,Sequelize } = require('sequelize');
-const db = require('../db/connection');
+const{ db } = require('../db/connection');
 
 const Tag = db.define('tag',{
     id_tag:{
@@ -16,11 +16,6 @@ const Tag = db.define('tag',{
     created_at:{
         type: Sequelize.DATE, 
         defaultValue: Sequelize.NOW 
-    },
-    updated_at:{
-        type: 'TIMESTAMP',
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
     }
 });
 

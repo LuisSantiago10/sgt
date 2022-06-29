@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const db = require('../db/connection');
+const { DataTypes,Sequelize } = require('sequelize');
+const{ db } = require('../db/connection');
 
 const Task = db.define('task',{
     id_task:{
@@ -22,14 +22,15 @@ const Task = db.define('task',{
     date_delivery:{
         type: DataTypes.DATE
     },
-    date_create:{
-        type: DataTypes.DATE
+    created_at:{
+        type: Sequelize.DATE, 
+        defaultValue: Sequelize.NOW 
     },
     id_user:{
-        type: DataTypes.NUMBER
+        type: DataTypes.INTEGER
     },
     id_status_completion:{
-        type: DataTypes.BOOLEAN
+        type: DataTypes.INTEGER
     }
 });
 

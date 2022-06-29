@@ -1,6 +1,6 @@
 const { response,request } = require('express');
 const Task = require('../models/task');
-const {listCreateTag} = require('./tag');
+const {listCreateTag,listDeleteTag} = require('./tag');
 
 
 const getTasks = async(req = request, res = response) =>{
@@ -16,15 +16,16 @@ const getTaskById = async(req = request, res = response) =>{
 const createTask = async(req = request, res = response) =>{
 
     let result = { 'status':500,'info':{'msg':'Error, I not create task.'} };
-    const data = getParamasForTask(req.body)
-    data.date_create = new Date().toLocaleDateString();
+    const data = getParamasForTask(req.body);
+    // data.create_at = new Date().toLocaleDateString();
     data.id_user = 4;    
     try {
         const task = new Task({...data});
         await task.save();
-        await listCreateTag(req,res,task.id_task);
+        await listCreateTag(req,task.id_task);
+        result = { 'status':200,'info': {'msg' : "create task and tag"} }
     } catch (error) {
-        result = { 'status':500,'info': {'msg' : error} };
+        result = { 'status':500,'info': {'msg' : error} }
     }
     return res.status(result.status).json(result.info);
 }
@@ -36,7 +37,10 @@ const updateTask = async(req, res = response) =>{
         try {
             const data = getParamasForTask(req.body);
             task.set( {...data} );
-            task.save();
+            await task.save();
+            await listDeleteTag(req.params.id);
+            await listCreateTag(req,req.params.id);
+
             result = { 'status':200,'info': task };
         } catch (error) {
             result = { 'status':200,'info': { 'msg' : error } };
@@ -51,6 +55,7 @@ const deleteTask = async(req, res = response) =>{
     if (task != null) {
         try {
             await task.destroy();
+            await listDeleteTag(task.id_task);
             result = { 'status':200,'info':{ 'msg':'Delete succees'} };
         } catch (error) {
             result = { 'status':200,'info': { 'msg' : error } };
