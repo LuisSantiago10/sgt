@@ -5,6 +5,7 @@ const { validatorfields } = require('../middlewares/validator-fields');
 const { validatorJWT } = require('../middlewares/validator-token');
 const router = Router();
 
+// the validatorJWT function is used to validate the user
 router.get('/',[validatorJWT],getTasks);
 router.get('/:id',[validatorJWT],getTaskById);
 router.post('/',

@@ -2,9 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const {db,cretaDB,createTableTask,createTableTag} = require('../db/connection');
 
-
+// main class to instantiate everything needed to start the project
 class Server{
     constructor(){
+        //  starts express connection and db creation
         this.app = express();
         this.port = 3500;
         this.path ={
@@ -18,12 +19,10 @@ class Server{
 
     async dbConnection(){
         try {
-            
-            await cretaDB();
-            await createTableTask();
-            await createTableTag();
-            await db.authenticate();
-
+            // connection validation and creation
+            await cretaDB()
+            createTableTask();
+            createTableTag();
         } catch (error) {
             throw new Error( error );
         }
@@ -35,6 +34,7 @@ class Server{
     }
 
     routes(){
+        // all project main paths
         this.app.use(this.path.task,require('../routes/task'));
     }
 

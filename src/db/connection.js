@@ -27,17 +27,17 @@ const db = new Sequelize(BD_DATABASE,BD_USER,BD_PASSWORD,{
 const cretaDB = () =>{
   // Open the connection to MySQL server
   const connection = mysql.createConnection({host:BD_HOST, user:BD_USER, password:BD_PASSWORD});
-  // Run create database statement
+  // Run create database statement 
   connection.query(`CREATE DATABASE IF NOT EXISTS ${BD_DATABASE}`,(err, results) => {
-      console.log(results);
-      console.log(err);
+      // console.log(results);
+      // console.log(err);
     }
   );
   // Close the connection
   connection.end();
 }
 
-const createTableTask = (req,res,next) =>{
+const createTableTask = () =>{
     // Importing the user model
     const Task = require('../models/task');
     // Creating all the tables defined in user
