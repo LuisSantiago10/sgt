@@ -7,7 +7,7 @@ class Server{
     constructor(){
         //  starts express connection and db creation
         this.app = express();
-        this.port = 3500;
+        this.port = process.env.PORT;
         this.path ={
             'task' : '/api/task',
         }
