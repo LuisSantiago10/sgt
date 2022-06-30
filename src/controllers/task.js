@@ -1,10 +1,12 @@
 const { response,request } = require('express');
 const Task = require('../models/task');
+const {decryptToken} = require('../helpers/jwt-access');
 const {listCreateTag,listDeleteTag} = require('./tag');
 
 
 const getTasks = async(req = request, res = response) =>{
-    const tasks =  await Task.findAll({raw:true});
+    const {id_user} = getValidateToken(req);
+    const tasks =  await findTaskkByParams({id_user});
     return res.status(200).json({tasks});
 }
 
@@ -14,11 +16,11 @@ const getTaskById = async(req = request, res = response) =>{
 }
 
 const createTask = async(req = request, res = response) =>{
-
+    const {id_user} = getValidateToken(req);
     let result = { 'status':500,'info':{'msg':'Error, I not create task.'} };
     const data = getParamasForTask(req.body);
     // data.create_at = new Date().toLocaleDateString();
-    data.id_user = 4;    
+    data.id_user = id_user;
     try {
         const task = new Task({...data});
         await task.save();
@@ -73,9 +75,24 @@ const getParamasForTask = ( params ) =>{
         date_delivery,comment,responsible
     }
 }
+const getValidateToken = (req) =>{
+    const token = req.header('Authorization');
+    const data = decryptToken(token);
+    return data;
+}
 
 const findTaskById = (id_task) =>{
     return Task.findByPk(id_task);
+}
+const findTaskkByParams = (params) =>{
+    task = Task.findAll({
+        where: {
+            ...params
+        },
+        raw: true
+      });
+
+    return task;
 }
 
 module.exports = {

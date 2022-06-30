@@ -1,10 +1,10 @@
 const { Sequelize } = require('sequelize');
 const mysql = require("mysql2");
 
-const BD_HOST = 'localhost';
-const BD_USER = 'root';
-const BD_PASSWORD = '';
-const BD_DATABASE = 'sgt'; 
+const BD_HOST = process.env.BD_HOST;
+const BD_USER = process.env.BD_USER;
+const BD_PASSWORD = process.env.BD_PASSWORD;
+const BD_DATABASE = process.env.BD_DATABASE; 
 
 const db = new Sequelize(BD_DATABASE,BD_USER,BD_PASSWORD,{
     host: BD_HOST,

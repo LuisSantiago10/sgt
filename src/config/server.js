@@ -18,6 +18,7 @@ class Server{
 
     async dbConnection(){
         try {
+            
             await cretaDB();
             await createTableTask();
             await createTableTag();

@@ -27,7 +27,7 @@ const Task = db.define('task',{
         defaultValue: Sequelize.NOW 
     },
     id_user:{
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
     },
     id_status_completion:{
         type: DataTypes.INTEGER
